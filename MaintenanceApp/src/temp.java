@@ -32,8 +32,15 @@ import java.util.*;
 //
 
 class DBHelper {
+    private static Connection con;
+
     Connection getConnection() {
-        Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
+        try {
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
         return con;
     }
 }
@@ -43,7 +50,9 @@ class SiteHelper {
     int costOpen = 6;
     int costNonOpen = 9;
 
-    Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
+    DBHelper dh = new DBHelper();
+
+    Connection con = dh.getConnection();
     Statement stmt = con.createStatement();
 
     int fetchMT(int site_id) {
@@ -74,14 +83,22 @@ class SiteHelper {
 }
 
 class OwnerHelper {
+    DBHelper dh = new DBHelper();
+    Connection con = dh.getConnection();
 
+    Statement stmt = con.createStatement();
+
+    void addOwner(String name) {
+        stmt.executeUpdate("insert into owners (name) values (" + name + ")");
+    }
 }
 
 class RequestHelper {
 
     SiteHelper sh = new SiteHelper();
+    OwnerHelper sh = new OwnerHelper();
 
-    Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
+    Connection con = dh.getConnection();
     Statement stmt = con.createStatement();
 
     void displayAllRequests() {
@@ -89,8 +106,8 @@ class RequestHelper {
         ResultSet rs = stmt.executeQuery("select * from requests");
 
         while(rs.next()){
-            System.out.println("Request ID: ", rs.getInt("request_id"));
-            System.out.println("Request Type: ", rs.getString("type");
+            System.out.println("Request ID: " + rs.getInt(1));
+            System.out.println("Request Type: " + rs.getString(2));
         }
     }
 
@@ -98,28 +115,18 @@ class RequestHelper {
         ResultSet request = stmt.executeQuery("select * from requests where request_id=" + request_id);
         int site_id;
         if(request.next()) {
-            System.out.println("Request ID:                 " + rs.getInt(1));
-            System.out.println("Request Type:               " + rs.getString(2));
-            System.out.println("Request New Owner:          " + rs.getInt(3));
-            System.out.println("Request MT Reduction:       " + rs.getInt(4));
-            System.out.println("Request Site Type Change:   " + rs.getString(5));
-            site_id = rs.getInt(1);
+            System.out.println("Request ID:                 " + request.getInt(1));
+            System.out.println("Request Type:               " + request.getString(2));
+            System.out.println("Request New Owner:          " + request.getInt(3));
+            System.out.println("Request MT Reduction:       " + request.getInt(4));
+            System.out.println("Request Site Type Change:   " + request.getString(5));
+            site_id = request.getInt(1);
         }
         fetchSiteAndOwner(site_id);
     }
 
     void fetchSiteAndOwner(int site_id) {
-        String query = "select
-                            s.site_id,
-                            s.length,
-                            s.breadth,
-                            s.persqft,
-                            s.sitetype,
-                            s.maintenance,
-                            o.owner_id,
-                            o.owner_name
-                        from sites s
-                        join owners o on s.owner_id = o.owner_id ";
+        String query = "select s.site_id, s.length, s.breadth, s.persqft, s.sitetype, s.maintenance, o.owner_id, o.owner_name from sites s join owners o on s.owner_id = o.owner_id ";
                     
         ResultSet rs = stmt.executeQuery(query);
 
@@ -139,11 +146,11 @@ class RequestHelper {
         ResultSet request = stmt.executeQuery("select * from requests where request_id=" + request_id);
         if(request.next()) {
 
-            String requestType  = request.getString(2);
-            int new_owner_id    = request.getInt(3);
-            int mt_amount       = request.getInt(4);
-            int new_site_type   = request.getString(5);
-            int site_id         = request.getInt(6);
+            String requestType      = request.getString(2);
+            int new_owner_id        = request.getInt(3);
+            int mt_amount           = request.getInt(4);
+            String new_site_type    = request.getString(5);
+            int site_id             = request.getInt(6);
 
             // if(requestType == "MAINTENANCE")        sh.reduceMT(site_id, amount);
             if(requestType == "OWNER_UPDATE")       sh.ownerUpdate(site_id, new_owner_id);
@@ -167,10 +174,13 @@ class RequestHelper {
 public class temp {
     public static void main (String[] args) {
 
-        Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
-        Statement stmt = con.createStatement();
-
+        SiteHelper sh = new SiteHelper();
+        OwnerHelper oh = new OwnerHelper();
         RequestHelper rh = new RequestHelper();
+        DBHelper dh = new DBHelper();
+
+        Connection con = dh.getConnection();
+        Statement stmt = con.createStatement();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -188,12 +198,7 @@ public class temp {
 
                     while(true) {
 
-                        System.out.println("\n1. View Request
-                                            \n2. Charge Maintenance
-                                            \n3. Add Owner
-                                            \n4. Edit Details
-                                            \n5. Remove Details
-                                            \n6. Exit"); 
+                        System.out.println("\n1. View Request \n2. Charge Maintenance \n3. Add Owner \n4. Edit Site Details \n5. Remove Details \n6. Exit"); 
 
                         int admin_choice = Integer.parseInt(br.readLine());
 
@@ -209,8 +214,8 @@ public class temp {
                             System.out.print("Enter 1-Accept 2-Reject: ");
                             int accept_reject = Integer.parseInt(br.readLine());
 
-                            if(accept_reject == "reject")   rh.rejectRequest(request_id);
-                            else                            rh.acceptRequest(request_id);
+                            if(accept_reject == 1)      rh.acceptRequest(request_id);
+                            else                        rh.rejectRequest(request_id);
                         }
                         
                         else if(admin_choice == 2) {
@@ -219,17 +224,13 @@ public class temp {
 
                         else if(admin_choice == 3) {
                             System.out.print("Enter the Owner Name to be added: ");
-                            String owner_name = br.readLine();
-
-                            
+                            String name = br.readLine();
+                            oh.addOwner(name);
                         }
 
                         else if(admin_choice == 4) {
-                            System.out.println("Enter the data to make changes to \n1. Sites \2. Owner");
-                            int add = Integer.parseInt(br.readLine());
-
-                            if(add == 1) {
-                            }
+                            System.out.print("Enter the site_id to make changes to: ");
+                            int site_id = Integer.parseInt(br.readLine());
                         }
                     }
                 }
@@ -244,9 +245,9 @@ public class temp {
 
                 while(true) {
                     System.out.print("Operation available: \n1. View Site Details \n2. Request for Owner Update \n3. Request for Site Type Update \n4. Exit");
-                    int user_choice = Integer.parseInt(br.readLine());
+                    int owner_choice = Integer.parseInt(br.readLine());
 
-                    if(user_choice == 1) {
+                    if(owner_choice == 1) {
 
                     }
                 }
