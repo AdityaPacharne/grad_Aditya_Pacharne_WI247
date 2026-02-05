@@ -2,20 +2,21 @@ package util;
 
 import java.sql.*;
 
-class DBHelper {
+public class DBHelper {
+    private static final String URL     = "jdbc:postgresql://localhost:5432/test";
+    private static final String USER    = "postgres";
+    private static final String PASS    = "root";
     private static Connection con;
 
-    static Connection getConnection() {
-        try {
-            con = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/test",
-                    "postgres",
-                    "root");
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+    public static Connection getConnection() {
+        try { con = DriverManager.getConnection(URL, USER, PASS); }
+        catch(Exception e) { System.out.println(e); }
         return con;
+    }
+
+    public static void closeConnection() {
+        try { con.close(); }
+        catch(Exception e) { System.out.println(e); }
     }
 }
 

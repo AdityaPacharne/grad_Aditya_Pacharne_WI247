@@ -38,7 +38,7 @@ class SiteHelper {
     int costOpen = 6;
     int costNonOpen = 9;
 
-    Connection con = dh.getConnection();
+    Connection con = DBHelper.getConnection();
     Statement stmt = con.createStatement();
 
     int fetchMT(int site_id) {
