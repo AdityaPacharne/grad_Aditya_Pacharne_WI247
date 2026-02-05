@@ -2,6 +2,8 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import util.DBHelper;
+
 /*
 0 - Open site
 1 - Villa
@@ -31,26 +33,10 @@ import java.util.*;
 // site_id references site(site_id);
 //
 
-class DBHelper {
-    private static Connection con;
-
-    Connection getConnection() {
-        try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "root");
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-        return con;
-    }
-}
-
 class SiteHelper {
 
     int costOpen = 6;
     int costNonOpen = 9;
-
-    DBHelper dh = new DBHelper();
 
     Connection con = dh.getConnection();
     Statement stmt = con.createStatement();
@@ -83,8 +69,7 @@ class SiteHelper {
 }
 
 class OwnerHelper {
-    DBHelper dh = new DBHelper();
-    Connection con = dh.getConnection();
+    Connection con = DBHelper.getConnection();
 
     Statement stmt = con.createStatement();
 
@@ -96,9 +81,9 @@ class OwnerHelper {
 class RequestHelper {
 
     SiteHelper sh = new SiteHelper();
-    OwnerHelper sh = new OwnerHelper();
+    OwnerHelper oh = new OwnerHelper();
 
-    Connection con = dh.getConnection();
+    Connection con = DBHelper.getConnection();
     Statement stmt = con.createStatement();
 
     void displayAllRequests() {
@@ -177,9 +162,8 @@ public class temp {
         SiteHelper sh = new SiteHelper();
         OwnerHelper oh = new OwnerHelper();
         RequestHelper rh = new RequestHelper();
-        DBHelper dh = new DBHelper();
 
-        Connection con = dh.getConnection();
+        Connection con = DBHelper.getConnection();
         Statement stmt = con.createStatement();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
