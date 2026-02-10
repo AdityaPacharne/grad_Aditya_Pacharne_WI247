@@ -7,13 +7,6 @@ import helper.SiteHelper;
 import helper.OwnerHelper;
 import helper.RequestHelper;
 
-/*
-   0 - Open site
-   1 - Villa
-   2 - Apartment
-   3 - Independent House
-   */
-
 // create table sites 
 // (site_id serial primary key,
 // length int,
@@ -38,7 +31,7 @@ import helper.RequestHelper;
 // site_id int references sites(site_id));
 
 
-public class temp {
+public class MaintenanceApp {
     public static void main (String[] args) {
 
         SiteHelper sh = new SiteHelper();
@@ -56,6 +49,7 @@ public class temp {
                                 Choose type of user
                                 1. Admin 
                                 2. Site Owner
+                                3. Exit
                                 """);
                 int user_choice = Integer.parseInt(br.readLine());
 
@@ -73,8 +67,9 @@ public class temp {
                                                 2. Charge Maintenance 
                                                 3. Add Owner 
                                                 4. Remove Owner 
-                                                5. View Owners
-                                                6. Exit 
+                                                5. View All Owners
+                                                6. View All Sites
+                                                7. Exit 
                                                 """);
                             int admin_choice = Integer.parseInt(br.readLine());
 
@@ -105,6 +100,8 @@ public class temp {
                             }
 
                             else if(admin_choice == 4) {
+                                System.out.println("Current Owners");
+                                oh.viewOwners();
                                 System.out.print("Enter the owner_id to remove: ");
                                 int owner_id = Integer.parseInt(br.readLine());
                                 oh.deleteOwner(owner_id);
@@ -113,6 +110,14 @@ public class temp {
                             else if(admin_choice == 5) {
                                 oh.viewOwners();
                             }
+
+                            else if(admin_choice == 6) {
+                                sh.viewAllSites();
+                            }
+
+                            else {
+                                break;
+                            }
                         }
                     }
                     else{
@@ -120,18 +125,83 @@ public class temp {
                         break;
                     }
                 }
-                else{
+                else if(user_choice == 2) {
                     System.out.print("Enter Owner ID: ");
                     int owner_id = Integer.parseInt(br.readLine());
 
+                    if(!oh.ownerExists(owner_id)) {
+                        System.out.println("Owner ID not found!");
+                        continue;
+                    }
+
                     while(true) {
-                        System.out.print("Operation available: \n1. View Site Details \n2. Request for Owner Update \n3. Request for Site Type Update \n4. Exit");
+                        System.out.print(   """
+                                            1. View My Info
+                                            2. View My Sites Info
+                                            3. Request Site Type Change
+                                            4. Make Payment
+                                            5. Exit
+                                            """);
+
                         int owner_choice = Integer.parseInt(br.readLine());
 
                         if(owner_choice == 1) {
+                            oh.viewOwnerInfo(owner_id);
+                        }
 
+                        else if(owner_choice == 2) {
+                            sh.viewSitesByOwner(owner_id);
+                        }
+
+                        else if(owner_choice == 3) {
+                            sh.viewSitesByOwner(owner_id);
+                            System.out.print("Enter site_id to change: ");
+                            int site_id = Integer.parseInt(br.readLine());
+
+                            if(!sh.verifySiteOwner(site_id, owner_id)) {
+                                System.out.println("You dont own this site");
+                                continue;
+                            }
+
+                            System.out.println( """
+                                                Available site types:
+                                                1. OPEN
+                                                2. VILLA
+                                                3. APARTMENT
+                                                4. HOUSE
+                                                Enter new site type number: 
+                                                """);
+                            int type_choice = Integer.parseInt(br.readLine());
+
+                            String new_type = "";
+                            switch (type_choice) {
+                                case 1 -> new_type = "OPEN";
+                                case 2 -> new_type = "VILLA";
+                                case 3 -> new_type = "APARTMENT";
+                                case 4 -> new_type = "HOUSE";
+                                default -> {
+                                    System.out.println("Invalid choice");
+                                    continue;
+                                }
+                            }
+
+                            rh.createTypeChangeRequest(site_id, new_type);
+                        }
+
+                        else if(owner_choice == 4) {
+                            oh.viewOwnerInfo(owner_id);
+                            System.out.print("\nEnter payment amount: ");
+                            int payment = Integer.parseInt(br.readLine());
+                            oh.makePayment(owner_id, payment);
+                        }
+
+                        else {
+                            break;
                         }
                     }
+                }
+                else {
+                    break;
                 }
             }
         }
