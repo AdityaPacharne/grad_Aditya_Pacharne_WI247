@@ -13,22 +13,7 @@ public class SiteHelper {
     Connection con;
     public SiteHelper() { con = DBHelper.getConnection(); }
 
-    int fetchMT(int site_id) {
-        String query =  """
-                        select maintenance
-                        from sites
-                        where site_id = ?
-                        """;
-        try {
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, site_id);
-            ResultSet rs = pstmt.executeQuery();
-            return rs.getInt(1);
-        }
-        catch(Exception e) {
-            System.out.println(e);
-        }
-        return -1;
+    void viewSites() {
     }
 
     String fetchSiteType(int site_id) {
@@ -43,9 +28,7 @@ public class SiteHelper {
             ResultSet rs = pstmt.executeQuery();
             return rs.getString(1);
         }
-        catch(Exception e) {
-            System.out.println(e);
-        }
+        catch(Exception e) { System.out.println(e); }
         return "";
     }
 
@@ -61,9 +44,7 @@ public class SiteHelper {
             pstmt.setInt(2, site_id);
             pstmt.executeUpdate();
         }
-        catch(Exception e) {
-            System.out.println(e);
-        }
+        catch(Exception e) { System.out.println(e); }
     }
 
     void typeUpdate(int site_id, String new_site_type) {
@@ -100,9 +81,23 @@ public class SiteHelper {
             }
             pstmt.executeUpdate();
         }
-        catch(Exception e) {
-            System.out.println(e);
+        catch(Exception e) { System.out.println(e); }
+    }
+
+    public void chargeMT() {
+        String query =  """
+                        update owners o
+                        set maintenance = coalesce(o.maintenance, 0)
+                        + (s.length * s.breadth * s.persqft)
+                        from sites s
+                        where s.owner_id = o.owner_id
+                        """;
+        try {
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate(query);
+            System.out.println("Maintenace charged to all sites");
         }
+        catch(Exception e) { System.out.println(e); }
     }
 }
 

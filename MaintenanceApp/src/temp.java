@@ -21,12 +21,12 @@ import helper.RequestHelper;
 // persqft int,
 // site_type varchar(20)
 // check (site_type in ('OPEN', 'VILLA', 'APARTMENT', 'HOUSE')),
-// maintenance int,
 // owner_id int references owners(owner_id));
 //
 // create table owners
 // (owner_id serial primary key,
-// name varchar(20));
+// name varchar(20),
+// maintenance int);
 //
 // create table requests
 // (request_id serial primary key,
@@ -72,8 +72,8 @@ public class temp {
                                                 1. View Request
                                                 2. Charge Maintenance 
                                                 3. Add Owner 
-                                                4. Edit Site Details 
-                                                5. Remove Details 
+                                                4. Remove Owner 
+                                                5. View Owners
                                                 6. Exit 
                                                 """);
                             int admin_choice = Integer.parseInt(br.readLine());
@@ -95,7 +95,7 @@ public class temp {
                             }
 
                             else if(admin_choice == 2) {
-                                // stmt.executeUpdate("update sites set maintenance = maintenance - (length * breadth * cost)");
+                                sh.chargeMT();
                             }
 
                             else if(admin_choice == 3) {
@@ -105,8 +105,13 @@ public class temp {
                             }
 
                             else if(admin_choice == 4) {
-                                System.out.print("Enter the site_id to make changes to: ");
-                                int site_id = Integer.parseInt(br.readLine());
+                                System.out.print("Enter the owner_id to remove: ");
+                                int owner_id = Integer.parseInt(br.readLine());
+                                oh.deleteOwner(owner_id);
+                            }
+                            
+                            else if(admin_choice == 5) {
+                                oh.viewOwners();
                             }
                         }
                     }
