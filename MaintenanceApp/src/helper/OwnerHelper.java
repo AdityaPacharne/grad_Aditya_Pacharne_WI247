@@ -1,16 +1,16 @@
+package helper;
+
 import java.util.*;
 import java.sql.*;
 
 import util.DBHelper;
 
-class OwnerHelper {
+public class OwnerHelper {
 
     Connection con;
-    OwnerHelper() {
-        con = DBHelper.getConnection();
-    }
+    public OwnerHelper() { con = DBHelper.getConnection(); }
 
-    void addOwner(String name) {
+    public void addOwner(String name) {
         String query =  """
                         insert into
                         owners (name)

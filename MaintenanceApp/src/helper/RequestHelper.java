@@ -1,19 +1,19 @@
+package helper;
+
 import java.util.*;
 import java.sql.*;
 
 import util.DBHelper;
 
-class RequestHelper {
+public class RequestHelper {
 
     Connection con;
-    RequestHelper() {
-        con = DBHelper.getConnection();
-    }
+    public RequestHelper() { con = DBHelper.getConnection(); }
 
     SiteHelper  sh = new SiteHelper();
     OwnerHelper oh = new OwnerHelper();
 
-    void displayAllRequests() {
+    public void displayAllRequests() {
         System.out.println("Here are the pending requests");
         String query =  """
                         select *
@@ -34,7 +34,7 @@ class RequestHelper {
         }
     }
 
-    void displayOneRequest(int request_id) {
+    public void displayOneRequest(int request_id) {
         String query =  """
                         select *
                         from requests
@@ -62,7 +62,7 @@ class RequestHelper {
         }
     }
 
-    void fetchSiteAndOwner(int site_id) {
+    public void fetchSiteAndOwner(int site_id) {
         String query =  """
                         select
                             s.site_id,
@@ -72,7 +72,7 @@ class RequestHelper {
                             s.site_type,
                             s.maintenance,
                             o.owner_id,
-                            o.owner_name
+                            o.name
                         from sites s
                         join owners o
                         on s.owner_id = o.owner_id
@@ -100,7 +100,7 @@ class RequestHelper {
         }
     }
 
-    void acceptRequest(int request_id) {
+    public void acceptRequest(int request_id) {
         String query =  """
                         select *
                         from requests
@@ -130,12 +130,12 @@ class RequestHelper {
         }
     }
 
-    void rejectRequest(int request_id) {
+    public void rejectRequest(int request_id) {
         System.out.println("Request Rejected :( ");
         deleteRequest(request_id);
     }
 
-    void deleteRequest(int request_id) {
+    public void deleteRequest(int request_id) {
         String query =  """
                         delete from requests
                         where request_id = ?

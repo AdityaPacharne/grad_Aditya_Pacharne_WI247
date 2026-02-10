@@ -1,9 +1,11 @@
+package helper;
+
 import java.util.*;
 import java.sql.*;
 
 import util.DBHelper;
 
-class SiteHelper {
+public class SiteHelper {
 
     int costOpen    = 6;
     int costNonOpen = 9;
