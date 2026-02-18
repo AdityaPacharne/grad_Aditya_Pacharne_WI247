@@ -47,7 +47,7 @@ public class PostgresDataSourceConfig {
             EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(postgresDataSource())
-                .packages("com.example.postgresentity")
+                .packages("com.example.demo.entities")
                 .persistenceUnit("postgres")
                 .build();
     }

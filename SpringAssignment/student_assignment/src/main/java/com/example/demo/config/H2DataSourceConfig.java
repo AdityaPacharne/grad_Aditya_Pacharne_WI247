@@ -51,7 +51,7 @@ public class H2DataSourceConfig {
             EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(h2DataSource())
-                .packages("com.example.h2entity")
+                .packages("com.example.demo.entities")
                 .persistenceUnit("h2")
                 .build();
     }

@@ -6,16 +6,17 @@ import jakarta.persistence.Id;
 @Entity
 public class Student {
 	@Id
-	private int roll_no;
+	private int rollno;
 	private int standard;
 	private String name;
 	private String school;
 	
-	public int getRoll_no() {
-		return roll_no;
+	
+	public int getRollno() {
+		return rollno;
 	}
-	public void setRoll_no(int roll_no) {
-		this.roll_no = roll_no;
+	public void setRollno(int rollno) {
+		this.rollno = rollno;
 	}
 	public int getStandard() {
 		return standard;
@@ -38,7 +39,7 @@ public class Student {
 	
 	@Override
 	public String toString() {
-		return "Student [roll_no=" + roll_no + ", standard=" + standard + ", name=" + name + ", school=" + school + "]";
+		return "Student [roll_no=" + rollno + ", standard=" + standard + ", name=" + name + ", school=" + school + "]";
 	}
 	
 }
