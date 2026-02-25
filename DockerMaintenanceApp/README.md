@@ -1,8 +1,6 @@
 # Docker Java + PostgreSQL Container Interaction
 
-## ------------------------------------
 ## Task
-## ------------------------------------
 
 Create an application that:
 
@@ -74,3 +72,4 @@ docker build -t maintenance .
 ```bash
 docker run --network task -it maintenance
 ```
+
