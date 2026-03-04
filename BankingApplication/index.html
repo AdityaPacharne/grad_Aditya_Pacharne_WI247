@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WhiteRock Inc.</title>
+        <link href="temp.css" rel="stylesheet"/>
+
+        <script>
+            function setContent(html){
+                document.getElementById("info").innerHTML = html;
+            }
+
+            function home(){
+                setContent("<h2>Welcome to WhiteRock Inc.</h2><p>Your trusted banking partner.</p>");
+            }
+
+            function about(){
+                setContent("<h2>About Us</h2><p>We are a trusted financial institution providing reliable banking services.</p>");
+            }
+
+            function toggleServices(){
+                var menu=document.getElementById("servicesMenu");
+                if(menu.style.display==="none") menu.style.display="block";
+                else menu.style.display="none";
+            }
+
+            function toggleNetbanking(){
+                var menu=document.getElementById("NetbankingMenu");
+                if(menu.style.display==="none") menu.style.display="block";
+                else menu.style.display="none";
+            }
+
+            function loanCalculator(){
+                var html = `
+                <h2>Loan Calculator</h2>
+
+                Loan Amount:<br><input type='number' id='loanAmt'><br>
+                Interest Rate (%):<br><input type='number' id='loanRate'><br>
+                Years:<br><input type='number' id='loanYears'><br>
+
+                <button onclick='calculateLoan()'>Calculate</button>
+
+                <p id='loanResult'></p>
+                `;
+                setContent(html);
+            }
+
+            function calculateLoan(){
+                var p=document.getElementById("loanAmt").value;
+                var r=document.getElementById("loanRate").value/100/12;
+                var n=document.getElementById("loanYears").value*12;
+                var emi=(p*r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
+                document.getElementById("loanResult").innerHTML="Monthly EMI: "+emi.toFixed(2);
+            }
+
+            function depositCalculator(){
+                var html=`
+                <h2>Deposit Calculator</h2>
+
+                Amount:<br><input type='number' id='depAmt'><br>
+                Interest Rate (%):<br><input type='number' id='depRate'><br>
+                Years:<br><input type='number' id='depYears'><br>
+
+                <button onclick='calculateDeposit()'>Calculate</button>
+                <p id='depResult'></p>
+                `;
+                setContent(html);
+            }
+
+            function calculateDeposit(){
+                var p=document.getElementById("depAmt").value;
+                var r=document.getElementById("depRate").value/100;
+                var t=document.getElementById("depYears").value;
+                var total=p*Math.pow((1+r),t);
+                document.getElementById("depResult").innerHTML="Maturity Amount: "+total.toFixed(2);
+            }
+
+            function recurringDeposit(){
+                setContent("<h2>Recurring Deposit</h2><p>Invest monthly and earn attractive interest.</p>");
+            }
+
+            function fixedDeposit(){
+                setContent("<h2>Fixed Deposit</h2><p>Secure investment with guaranteed returns.</p>");
+            }
+
+            function accountOpening(){
+                var html=`
+                <h2>Account Opening</h2>
+
+                Full Name:<br><input type='text'><br>
+                Email:<br><input type='email'><br>
+                Account Type:<br>
+
+                <select>
+                    <option>Savings</option>
+                    <option>Current</option>
+                </select><br>
+
+                <button>Submit</button>
+                `;
+                setContent(html);
+            }
+
+            function login(){
+                var html=`
+                <h2>Login</h2>
+
+                Username:<br><input type='text' id='loginUser'><br>
+                Password:<br><input type='password' id='loginPass'><br>
+
+                <button onclick='validateLogin()'>Login</button>
+                <p id='loginMsg'></p>
+                `;
+                setContent(html);
+            }
+
+            function validateLogin(){
+                var u=document.getElementById("loginUser").value;
+                var p=document.getElementById("loginPass").value;
+                if(u=="" || p==""){
+                    document.getElementById("loginMsg").innerHTML="All fields required";
+                }else{
+                    document.getElementById("loginMsg").innerHTML="Validation Successful";
+                }
+            }
+
+            function signup(){
+                var html=`
+                <h2>Signup</h2>
+
+                Email:<br><input type='email' id='signEmail'><br>
+                Username:<br><input type='text' id='signUser'><br>
+                Password:<br><input type='password' id='signPass'><br>
+                Confirm Password:<br><input type='password' id='signPass2'><br>
+
+                <button onclick='validateSignup()'>Signup</button>
+                <p id='signMsg'></p>
+                `;
+                setContent(html);
+            }
+
+            function validateSignup(){
+                var email=document.getElementById("signEmail").value;
+                var p1=document.getElementById("signPass").value;
+                var p2=document.getElementById("signPass2").value;
+
+                var emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+                if(email=="" || p1=="" || p2==""){
+                    document.getElementById("signMsg").innerHTML="All fields required";
+                }
+                else if(!email.match(emailPattern)){
+                    document.getElementById("signMsg").innerHTML="Invalid Email Format";
+                }
+                else if(p1!=p2){
+                    document.getElementById("signMsg").innerHTML="Passwords do not match";
+                }
+                else{
+                    document.getElementById("signMsg").innerHTML="Signup Successful";
+                }
+            }
+        </script>
+    </head>
+
+    <body onload="home()">
+
+        <header>WhiteRock Inc.</header>
+
+        <div id="menu">
+            <div onclick="home()">Home</div>
+            <div onclick="about()">About Us</div>
+
+            <div onclick="toggleServices()">Services</div>
+            <div id="servicesMenu" style="display:none;">
+                <div class="sub" onclick="loanCalculator()">Loan Calculator</div>
+                <div class="sub" onclick="depositCalculator()">Deposit Calculator</div>
+                <div class="sub" onclick="recurringDeposit()">Recurring Deposit</div>
+                <div class="sub" onclick="fixedDeposit()">Fixed Deposit</div>
+                <div class="sub" onclick="accountOpening()">Account Opening</div>
+            </div>
+
+            <div onclick="toggleNetbanking()">Netbanking</div>
+            <div id="NetbankingMenu" style="display:none;">
+                <div class="sub" onclick="login()">Login</div>
+                <div class="sub" onclick="signup()">Signup</div>
+            </div>
+
+        </div>
+
+        <div id="info"></div>
+
+        <footer>
+            www.whiterock.com<br>
+            © All Rights Reserved
+        </footer>
+
+    </body>
+</html>
