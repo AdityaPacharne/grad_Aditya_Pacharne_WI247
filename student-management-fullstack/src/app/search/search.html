@@ -1,0 +1,85 @@
+<div class="search-container">
+  <h2>Search & Filter</h2>
+
+  <div class="card">
+    <h3>Find Student by Reg No</h3>
+    <div class="row">
+      <input type="number" placeholder="Registration Number" [(ngModel)]="regNoInput" />
+      <button (click)="findByRegNo()">Search</button>
+    </div>
+    <div *ngIf="foundStudent$ | async as student" class="result-box">
+      <p><strong>Name:</strong> {{ student.name }}</p>
+      <p><strong>School:</strong> {{ student.school }}</p>
+      <p><strong>Standard:</strong> {{ student.standard }}</p>
+      <p><strong>Gender:</strong> {{ student.gender }}</p>
+      <p><strong>Percentage:</strong> {{ student.percentage }}%</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Students by School</h3>
+    <div class="row">
+      <input type="text" placeholder="School Name" [(ngModel)]="schoolInput" />
+      <button (click)="findBySchool()">Search</button>
+    </div>
+    <table *ngIf="schoolStudents$ | async as schoolStudents">
+      <thead>
+        <tr><th>Reg No</th><th>Name</th><th>Standard</th><th>Gender</th><th>Percentage</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of schoolStudents">
+          <td>{{ s.regNo }}</td><td>{{ s.name }}</td>
+          <td>{{ s.standard }}</td><td>{{ s.gender }}</td><td>{{ s.percentage }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Student Count by School</h3>
+    <div class="row">
+      <input type="text" placeholder="School Name" [(ngModel)]="schoolCountInput" />
+      <button (click)="findCountBySchool()">Get Count</button>
+    </div>
+    <p *ngIf="schoolCount$ | async as count" class="result-box">Total Students: <strong>{{ count }}</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>Student Count by Standard</h3>
+    <div class="row">
+      <input type="number" placeholder="Standard (e.g. 5)" [(ngModel)]="standardInput" />
+      <button (click)="findCountByStandard()">Get Count</button>
+    </div>
+    <p *ngIf="standardCount$ | async as count" class="result-box">Total Students: <strong>{{ count }}</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>Students by Result</h3>
+    <div class="row">
+      <button class="btn-pass" (click)="findByResult(true)">Pass</button>
+      <button class="btn-fail" (click)="findByResult(false)">Fail</button>
+    </div>
+    <table *ngIf="resultStudents$ | async as resultStudents">
+      <thead>
+        <tr><th>Reg No</th><th>Name</th><th>School</th><th>Standard</th><th>Percentage</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of resultStudents">
+          <td>{{ s.regNo }}</td><td>{{ s.name }}</td>
+          <td>{{ s.school }}</td><td>{{ s.standard }}</td><td>{{ s.percentage }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Strength by Gender & Standard</h3>
+    <div class="row">
+      <input type="text"   placeholder="Gender (MALE / FEMALE)" [(ngModel)]="genderInput" />
+      <input type="number" placeholder="Standard"               [(ngModel)]="strengthStandardInput" />
+      <button (click)="findStrength()">Get Strength</button>
+    </div>
+    <p *ngIf="strength$ | async as strength" class="result-box">Total Students: <strong>{{ strength }}</strong></p>
+  </div>
+
+</div>

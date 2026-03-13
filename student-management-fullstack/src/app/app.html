@@ -1,0 +1,12 @@
+<div class="app-wrapper">
+  <nav class="navbar">
+    <span class="brand">Student Portal</span>
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/search" routerLinkActive="active">Search</a>
+    </div>
+  </nav>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,57 @@
+<div class="home-container">
+
+  <div class="top-bar">
+    <h2>All Students</h2>
+    <button class="btn-add" (click)="openAddForm()">+ Add Student</button>
+  </div>
+
+  <p *ngIf="message" class="msg">{{ message }}</p>
+
+  <div *ngIf="showForm" class="form-box">
+    <h3>{{ isEditing ? 'Edit Student' : 'Add Student' }}</h3>
+    <div class="form-grid">
+      <input type="number" placeholder="Reg No"     [(ngModel)]="formData.regNo"      [disabled]="isEditing" />
+      <input type="number" placeholder="Roll No"    [(ngModel)]="formData.rollNo"     />
+      <input type="text"   placeholder="Name"       [(ngModel)]="formData.name"       />
+      <input type="number" placeholder="Standard"   [(ngModel)]="formData.standard"   />
+      <input type="text"   placeholder="School"     [(ngModel)]="formData.school"     />
+      <input type="text"   placeholder="Gender"     [(ngModel)]="formData.gender"     />
+      <input type="number" placeholder="Percentage" [(ngModel)]="formData.percentage" />
+    </div>
+    <div class="form-actions">
+      <button class="btn-save"   (click)="submitForm()">{{ isEditing ? 'Update' : 'Save' }}</button>
+      <button class="btn-cancel" (click)="cancelForm()">Cancel</button>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Reg No</th>
+        <th>Roll No</th>
+        <th>Name</th>
+        <th>Standard</th>
+        <th>School</th>
+        <th>Gender</th>
+        <th>Percentage</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of students$ | async">
+        <td>{{ s.regNo }}</td>
+        <td>{{ s.rollNo }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.standard }}</td>
+        <td>{{ s.school }}</td>
+        <td>{{ s.gender }}</td>
+        <td>{{ s.percentage }}%</td>
+        <td>
+          <button class="btn-edit"   (click)="openEditForm(s)">Edit</button>
+          <button class="btn-delete" (click)="deleteStudent(s.regNo)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
